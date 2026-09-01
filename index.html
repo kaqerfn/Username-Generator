@@ -1,601 +1,152 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+#include <iostream>
+#include <vector>
+#include <string>
+#include <random>
+#include <unordered_set>
 
-  <title>RareName</title>
+using namespace std;
 
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+random_device rd;
+mt19937 rng(rd());
 
-    body {
-      background: #08090c;
-      color: #fff;
-      font-family: Arial, Helvetica, sans-serif;
-      min-height: 100vh;
-    }
-
-    .page {
-      width: 100%;
-      max-width: 900px;
-      margin: auto;
-      padding: 70px 20px;
-    }
-
-    .header {
-      text-align: center;
-      margin-bottom: 45px;
-    }
-
-    .logo {
-      font-size: 15px;
-      font-weight: 800;
-      letter-spacing: 3px;
-      color: #777;
-      text-transform: uppercase;
-      margin-bottom: 18px;
-    }
-
-    h1 {
-      font-size: clamp(42px, 8vw, 72px);
-      letter-spacing: -4px;
-      line-height: 1;
-      margin-bottom: 15px;
-    }
-
-    .subtitle {
-      color: #777;
-      font-size: 16px;
-    }
-
-    .generator {
-      background: #0e1015;
-      border: 1px solid #1c1f27;
-      border-radius: 18px;
-      padding: 25px;
-    }
-
-    .controls {
-      display: grid;
-      grid-template-columns: 1fr 180px;
-      gap: 12px;
-      margin-bottom: 20px;
-    }
-
-    input,
-    select {
-      width: 100%;
-      height: 52px;
-      border: 1px solid #242832;
-      border-radius: 10px;
-      background: #090a0e;
-      color: white;
-      padding: 0 15px;
-      font-size: 15px;
-      outline: none;
-    }
-
-    input:focus,
-    select:focus {
-      border-color: #555b68;
-    }
-
-    button {
-      border: 0;
-      cursor: pointer;
-      color: white;
-      font-weight: 700;
-      transition: .15s;
-    }
-
-    .generate {
-      width: 100%;
-      height: 52px;
-      border-radius: 10px;
-      background: white;
-      color: #090a0e;
-      font-size: 15px;
-      margin-bottom: 25px;
-    }
-
-    .generate:hover {
-      transform: translateY(-1px);
-      background: #e8e8e8;
-    }
-
-    .results {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-    }
-
-    .name {
-      min-height: 64px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 12px 14px;
-      background: #090a0e;
-      border: 1px solid #1d2028;
-      border-radius: 11px;
-    }
-
-    .name-text {
-      font-size: 17px;
-      font-weight: 700;
-      letter-spacing: .4px;
-    }
-
-    .actions {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .copy,
-    .favorite {
-      width: 38px;
-      height: 38px;
-      border-radius: 8px;
-      background: #171a21;
-      color: #aaa;
-      font-size: 15px;
-    }
-
-    .copy:hover,
-    .favorite:hover {
-      background: #222630;
-      color: white;
-    }
-
-    .favorite.active {
-      color: white;
-    }
-
-    .bottom {
-      margin-top: 35px;
-    }
-
-    .bottom-title {
-      font-size: 13px;
-      color: #666;
-      text-transform: uppercase;
-      letter-spacing: 2px;
-      margin-bottom: 12px;
-    }
-
-    .favorites {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-    }
-
-    .favorite-name {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      background: #101218;
-      border: 1px solid #1c1f27;
-      border-radius: 8px;
-      padding: 9px 11px;
-      font-size: 14px;
-    }
-
-    .remove {
-      background: transparent;
-      color: #555;
-      font-size: 15px;
-    }
-
-    .remove:hover {
-      color: white;
-    }
-
-    .empty {
-      color: #555;
-      font-size: 14px;
-    }
-
-    .copied {
-      position: fixed;
-      bottom: 25px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: white;
-      color: black;
-      padding: 11px 18px;
-      border-radius: 9px;
-      font-size: 14px;
-      font-weight: 700;
-      opacity: 0;
-      pointer-events: none;
-      transition: .2s;
-    }
-
-    .copied.show {
-      opacity: 1;
-    }
-
-    @media (max-width: 650px) {
-      .page {
-        padding: 45px 15px;
-      }
-
-      .controls {
-        grid-template-columns: 1fr;
-      }
-
-      .results {
-        grid-template-columns: 1fr;
-      }
-
-      h1 {
-        letter-spacing: -2px;
-      }
-    }
-  </style>
-</head>
-
-<body>
-
-  <div class="page">
-
-    <header class="header">
-      <div class="logo">RareName</div>
-
-      <h1>Find your name.</h1>
-
-      <p class="subtitle">
-        Generate short, clean and unique usernames.
-      </p>
-    </header>
-
-    <section class="generator">
-
-      <div class="controls">
-
-        <input
-          id="input"
-          type="text"
-          maxlength="12"
-          placeholder="Optional word..."
-          autocomplete="off"
-        >
-
-        <select id="style">
-          <option value="rare">Rare</option>
-          <option value="short">3–4 Characters</option>
-          <option value="clean">Clean</option>
-          <option value="prefix">itz / x / vx</option>
-        </select>
-
-      </div>
-
-      <button class="generate" onclick="generate()">
-        Generate Names
-      </button>
-
-      <div id="results" class="results"></div>
-
-      <div class="bottom">
-
-        <div class="bottom-title">
-          Favorites
-        </div>
-
-        <div id="favorites" class="favorites">
-          <span class="empty">Nothing saved yet.</span>
-        </div>
-
-      </div>
-
-    </section>
-
-  </div>
-
-  <div id="copied" class="copied">
-    Copied
-  </div>
-
-
-<script>
-
-const consonants =
-  "bcdfghjklmnpqrstvwxyz";
-
-const vowels =
-  "aeiou";
-
-const endings =
-  ["q", "x", "z", "n", "r", "k", "v", "y"];
-
-const prefixes =
-  ["itz", "x", "vx", "zy", "ky", "nx"];
-
-let favorites =
-  JSON.parse(localStorage.getItem("rareNames")) || [];
-
-
-function pick(string) {
-  return string[
-    Math.floor(Math.random() * string.length)
-  ];
+string pick(const vector<string>& list) {
+    uniform_int_distribution<int> dist(0, list.size() - 1);
+    return list[dist(rng)];
 }
 
-
-function randomConsonant() {
-  return pick(consonants);
-}
-
-
-function randomVowel() {
-  return pick(vowels);
-}
-
-
-/*
-  Creates names with more natural-looking
-  random patterns instead of pure gibberish.
-*/
-
-function rareName(min, max) {
-
-  const length =
-    Math.floor(Math.random() * (max - min + 1)) + min;
-
-  let result = "";
-
-  for (let i = 0; i < length; i++) {
-
-    /*
-      Occasionally place a vowel.
-      This creates patterns like:
-
-      kaqerfn
-      zenunq
-      kera
-      vexun
-    */
-
-    if (i === 1 || Math.random() < .28) {
-      result += randomVowel();
-    } else {
-      result += randomConsonant();
-    }
-  }
-
-  // Occasionally add a rare ending.
-  if (Math.random() < .35) {
-    result += pick(endings);
-  }
-
-  return result.toLowerCase();
-}
-
-
-function createName(style, input) {
-
-  if (input) {
-
-    const word =
-      input
-        .toLowerCase()
-        .replace(/[^a-z]/g, "");
-
-    if (style === "short") {
-      return word.slice(0, 3) +
-        pick(["x", "z", "q", "k"]);
-    }
-
-    if (style === "prefix") {
-      return pick(prefixes) +
-        rareName(3, 5);
-    }
-
-    if (style === "clean") {
-      return word.slice(0, 5) +
-        pick(["a", "e", "i", "x", "n"]);
-    }
-
-    return word.slice(0, 4) +
-      rareName(2, 3);
-  }
-
-
-  if (style === "short") {
-    return rareName(3, 4)
-      .slice(0, 4);
-  }
-
-
-  if (style === "clean") {
-    return rareName(4, 6);
-  }
-
-
-  if (style === "prefix") {
-    return pick(prefixes) +
-      rareName(3, 5);
-  }
-
-
-  return rareName(5, 8);
-}
-
-
-function generate() {
-
-  const style =
-    document.getElementById("style").value;
-
-  const input =
-    document.getElementById("input").value;
-
-  const results =
-    document.getElementById("results");
-
-  results.innerHTML = "";
-
-  const names = new Set();
-
-  while (names.size < 10) {
-    names.add(createName(style, input));
-  }
-
-  names.forEach(name => {
-
-    const box =
-      document.createElement("div");
-
-    box.className = "name";
-
-    const isFavorite =
-      favorites.includes(name);
-
-    box.innerHTML = `
-      <span class="name-text">${name}</span>
-
-      <div class="actions">
-
-        <button
-          class="copy"
-          title="Copy"
-          onclick="copyName('${name}')">
-          ⧉
-        </button>
-
-        <button
-          class="favorite ${isFavorite ? "active" : ""}"
-          title="Favorite"
-          onclick="toggleFavorite('${name}', this)">
-          ${isFavorite ? "★" : "☆"}
-        </button>
-
-      </div>
-    `;
-
-    results.appendChild(box);
-  });
-}
-
-
-function copyName(name) {
-
-  navigator.clipboard.writeText(name);
-
-  const popup =
-    document.getElementById("copied");
-
-  popup.textContent =
-    `"${name}" copied`;
-
-  popup.classList.add("show");
-
-  setTimeout(() => {
-    popup.classList.remove("show");
-  }, 1200);
-}
-
-
-function toggleFavorite(name, button) {
-
-  if (favorites.includes(name)) {
-
-    favorites =
-      favorites.filter(x => x !== name);
-
-    button.textContent = "☆";
-    button.classList.remove("active");
-
-  } else {
-
-    favorites.push(name);
-
-    button.textContent = "★";
-    button.classList.add("active");
-  }
-
-  localStorage.setItem(
-    "rareNames",
-    JSON.stringify(favorites)
-  );
-
-  renderFavorites();
-}
-
-
-function removeFavorite(name) {
-
-  favorites =
-    favorites.filter(x => x !== name);
-
-  localStorage.setItem(
-    "rareNames",
-    JSON.stringify(favorites)
-  );
-
-  renderFavorites();
-}
-
-
-function renderFavorites() {
-
-  const container =
-    document.getElementById("favorites");
-
-  container.innerHTML = "";
-
-  if (favorites.length === 0) {
-
-    container.innerHTML =
-      `<span class="empty">Nothing saved yet.</span>`;
-
-    return;
-  }
-
-  favorites.forEach(name => {
-
-    const item =
-      document.createElement("div");
-
-    item.className =
-      "favorite-name";
-
-    item.innerHTML = `
-      <span>${name}</span>
-
-      <button
-        class="remove"
-        onclick="removeFavorite('${name}')">
-        ×
-      </button>
-    `;
-
-    container.appendChild(item);
-  });
-}
-
-
-document
-  .getElementById("input")
-  .addEventListener("keydown", e => {
-
-    if (e.key === "Enter") {
-      generate();
+string createUsername() {
+
+    vector<string> starts = {
+        "ka", "ke", "ki", "ko",
+        "za", "ze", "zi", "zo",
+        "va", "ve", "vi",
+        "ra", "re", "ri",
+        "qa", "qe", "qi",
+        "na", "ne", "ni",
+        "la", "le", "li",
+        "da", "de", "di",
+        "sa", "se", "si"
+    };
+
+    vector<string> middles = {
+        "qer", "qen", "qel",
+        "zer", "zen", "zel",
+        "ker", "ken", "kel",
+        "ver", "ven", "vel",
+        "ren", "rel", "rin",
+        "dex", "vex", "nex",
+        "ray", "rae",
+        "zay", "zae",
+        "kyr", "kye"
+    };
+
+    vector<string> endings = {
+        "n", "q", "r", "x",
+        "z", "k", "y",
+        "a", "e", "au",
+        "en", "er", "un"
+    };
+
+    vector<string> shortNames = {
+        "kera", "zena", "zera",
+        "vexa", "nexa", "raya",
+        "kae", "zai", "kei",
+        "qen", "zen", "kyr",
+        "vex", "zkl", "qra",
+        "kza", "zra", "vra", "kex"
+    };
+
+    vector<string> prefixes = {
+        "itz", "x", "vx", "zy", "ky"
+    };
+
+    uniform_int_distribution<int> typeDist(0, 7);
+    int type = typeDist(rng);
+
+    string name;
+
+    switch (type) {
+
+        // kaqerfn / zenunq
+        case 0:
+            name = pick(starts)
+                  + pick(middles)
+                  + pick(endings);
+            break;
+
+        // Short names
+        case 1:
+            name = pick(starts)
+                  + pick({"a", "e", "i", "o"})
+                  + pick(endings);
+            break;
+
+        // kera / zena / vexa
+        case 2:
+            name = pick(shortNames);
+            break;
+
+        // 5–6 characters
+        case 3:
+            name = pick(starts)
+                  + pick({
+                      "er", "en", "ar",
+                      "ay", "ex", "un"
+                  });
+            break;
+
+        // Compact random-looking names
+        case 4:
+            name = pick(starts)
+                  + pick(middles).substr(0, 2)
+                  + pick(endings);
+            break;
+
+        // Very short names
+        case 5:
+            name = pick({
+                "zkl", "kzr", "vex",
+                "qra", "kyr", "zra",
+                "vka", "qen", "kex",
+                "zya"
+            });
+            break;
+
+        // itz____ style
+        case 6:
+            name = "itz"
+                  + pick(starts)
+                  + pick({
+                      "au", "en", "er", "a"
+                  });
+            break;
+
+        default:
+            name = pick(shortNames);
+            break;
     }
 
-  });
+    return name;
+}
 
+int main() {
 
-renderFavorites();
-generate();
+    int amount;
 
-</script>
+    cout << "How many usernames? ";
+    cin >> amount;
 
-</body>
-</html>
+    unordered_set<string> usernames;
+
+    while (usernames.size() < amount) {
+        usernames.insert(createUsername());
+    }
+
+    cout << "\nGenerated usernames:\n\n";
+
+    for (const string& username : usernames) {
+        cout << username << '\n';
+    }
+
+    return 0;
+}
