@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>Username Generator</title>
+  <title>username generator</title>
 
   <style>
     * {
@@ -13,174 +13,154 @@
 
     body {
       margin: 0;
-      min-height: 100vh;
-      background: #0f0f11;
-      color: #ededee;
-      font-family: Arial, Helvetica, sans-serif;
+      background: #111113;
+      color: #dddde1;
+      font-family: Arial, sans-serif;
     }
 
-    .app {
-      width: min(680px, 94%);
-      margin: auto;
-      padding: 30px 0 45px;
+    .wrap {
+      width: 92%;
+      max-width: 620px;
+      margin: 0 auto;
+      padding: 28px 0 40px;
     }
 
-    .header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 22px;
+    .top {
+      margin-bottom: 18px;
     }
 
     .title {
-      color: #d0d0d3;
-      font-size: 14px;
-      font-weight: 500;
+      font-size: 13px;
+      color: #a9a9ae;
     }
 
-    .dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: #ff5fa2;
-      box-shadow: 0 0 12px rgba(255, 95, 162, .4);
+    .pink {
+      color: #f064a5;
     }
 
     .search {
       width: 100%;
-      height: 46px;
-      padding: 0 14px;
+      height: 42px;
+      padding: 0 12px;
 
-      background: #1b1b1f;
+      background: #19191c;
+      color: #eee;
+
       border: 1px solid #29292d;
-      border-radius: 9px;
+      border-radius: 6px;
       outline: none;
 
-      color: white;
-      font-size: 14px;
-    }
-
-    .search::placeholder {
-      color: #707077;
+      font-size: 13px;
     }
 
     .search:focus {
-      border-color: #b94d7c;
+      border-color: #b64d7c;
+    }
+
+    .search::placeholder {
+      color: #66666c;
     }
 
     .generate {
       width: 100%;
-      height: 46px;
-      margin-top: 9px;
+      height: 42px;
+      margin-top: 7px;
 
-      border: 0;
-      border-radius: 9px;
-
-      background: #e85b9b;
+      background: #e65c9c;
       color: white;
-
-      font-size: 14px;
-      font-weight: 600;
-
-      cursor: pointer;
-    }
-
-    .generate:hover {
-      background: #f067a6;
-    }
-
-    .generate:active {
-      transform: scale(.99);
-    }
-
-    .results {
-      margin-top: 17px;
-    }
-
-    .username-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-
-      min-height: 53px;
-      padding: 0 13px;
-      margin-bottom: 7px;
-
-      background: #18181b;
-      border: 1px solid #242428;
-      border-radius: 9px;
-    }
-
-    .name {
-      color: #eeeeef;
-      font-family: monospace;
-      font-size: 15px;
-      letter-spacing: .2px;
-    }
-
-    .actions {
-      display: flex;
-      gap: 6px;
-    }
-
-    .action {
-      padding: 7px 9px;
 
       border: 0;
       border-radius: 6px;
 
-      background: #232327;
-      color: #77777f;
-
-      font-size: 12px;
+      font-size: 13px;
+      font-weight: bold;
       cursor: pointer;
     }
 
-    .action:hover {
-      color: #ff5fa2;
+    .generate:hover {
+      background: #ed68a5;
     }
 
-    .favorite.active {
-      color: #ff5fa2;
+    .generate:active {
+      transform: translateY(1px);
     }
 
-    .empty {
-      padding: 35px 0;
-      text-align: center;
-      color: #66666d;
-      font-size: 13px;
+    .list {
+      margin-top: 15px;
     }
 
-    .footer {
-      margin-top: 24px;
-      text-align: center;
-      color: #505057;
+    .item {
+      min-height: 47px;
+      padding: 0 11px;
+
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      background: #18181b;
+      border: 1px solid #222225;
+
+      margin-bottom: 5px;
+      border-radius: 5px;
+    }
+
+    .username {
+      color: #e4e4e7;
+      font-family: monospace;
+      font-size: 14px;
+    }
+
+    .right {
+      display: flex;
+      gap: 5px;
+    }
+
+    .btn {
+      border: 0;
+      background: #222226;
+      color: #737379;
+
+      border-radius: 4px;
+      padding: 6px 8px;
+
       font-size: 11px;
+      cursor: pointer;
     }
 
-    @media (max-width: 500px) {
-      .app {
-        padding-top: 23px;
-      }
+    .btn:hover {
+      color: #f064a5;
+    }
 
-      .title {
-        font-size: 12px;
-      }
+    .saved {
+      color: #f064a5;
+    }
+
+    .nothing {
+      text-align: center;
+      padding: 25px;
+      color: #55555b;
+      font-size: 12px;
+    }
+
+    .bottom {
+      margin-top: 17px;
+      color: #4f4f55;
+      font-size: 10px;
     }
   </style>
 </head>
 
 <body>
 
-  <main class="app">
+  <div class="wrap">
 
-    <header class="header">
+    <div class="top">
       <div class="title">
-        username generator made by @kaqerfn on discord
+        username generator made by
+        <span class="pink">@kaqerfn</span>
+        on discord
       </div>
-
-      <div class="dot"></div>
-    </header>
+    </div>
 
 
     <input
@@ -201,45 +181,38 @@
     </button>
 
 
-    <section id="results" class="results"></section>
+    <div id="list" class="list"></div>
 
 
-    <div class="footer">
-      generated creator handles
+    <div class="bottom">
+      generated names are not guaranteed to be available
     </div>
 
-  </main>
+  </div>
 
 
   <script>
 
-    const generateButton =
-      document.getElementById("generate");
+    const list = document.getElementById("list");
+    const search = document.getElementById("search");
+    const generate = document.getElementById("generate");
 
-    const searchInput =
-      document.getElementById("search");
-
-    const results =
-      document.getElementById("results");
-
-
-    let usernames = [];
+    let names = [];
 
 
     /*
-      These are building blocks rather than a list
-      of finished usernames.
+      Small pieces are mixed together instead of
+      following one obvious formula.
 
-      The generator combines them differently so
-      the results don't repeatedly give you the
-      same names.
+      The goal is short creator-style handles,
+      not dictionary words or keyboard spam.
     */
 
-    const beginnings = [
-      "za", "ze", "zi",
+    const first = [
       "ka", "ke", "ki",
+      "za", "ze", "zi",
       "va", "ve", "vi",
-      "xa", "xe", "xi",
+      "xa", "xe",
       "qa", "qe",
       "ra", "re",
       "na", "ne",
@@ -250,34 +223,28 @@
       "ma", "me"
     ];
 
-
-    const shortBeginnings = [
-      "z", "k", "v", "x",
-      "q", "r", "n", "d",
-      "l", "s"
+    const small = [
+      "k", "q", "x", "z",
+      "v", "r", "n", "d",
+      "f", "l", "s", "m"
     ];
 
-
-    const middles = [
-      "y", "v", "x", "z",
-      "r", "n", "l", "m",
-      "d", "k", "q"
+    const vowels = [
+      "a", "e", "i", "o", "u"
     ];
-
 
     const endings = [
-      "a", "e", "i", "o",
       "n", "r", "x", "z",
-      "y", "q", "v"
+      "q", "v", "k", "y",
+      "f", "d"
     ];
 
-
-    const extras = [
+    const pieces = [
       "en", "er", "an",
-      "in", "ix", "yn",
-      "ev", "ex", "ar",
-      "ai", "eo", "av",
-      "ez", "or"
+      "in", "yn", "ev",
+      "ex", "ar", "av",
+      "ix", "or", "ai",
+      "el", "ez"
     ];
 
 
@@ -288,248 +255,168 @@
     }
 
 
-    function makeUsername() {
+    function makeName() {
 
-      const type =
-        Math.floor(Math.random() * 9);
+      let name = "";
 
-      let name;
+      const style =
+        Math.floor(Math.random() * 10);
 
 
-      /*
-        4 letters
-        Example shape: zven
-      */
-
-      if (type === 0) {
-
+      if (style === 0) {
         name =
-          pick(shortBeginnings) +
-          pick(endings) +
-          pick(middles) +
+          pick(small) +
+          pick(vowels) +
           pick(endings);
-
       }
 
-
-      /*
-        5 letters
-        Example shape: vexin
-      */
-
-      else if (type === 1) {
-
+      else if (style === 1) {
         name =
-          pick(beginnings) +
-          pick(middles) +
+          pick(first) +
           pick(endings);
-
       }
 
-
-      /*
-        5 letters
-        Example shape: zayen
-      */
-
-      else if (type === 2) {
-
+      else if (style === 2) {
         name =
-          pick(shortBeginnings) +
-          pick(endings) +
-          pick(middles) +
-          pick(extras);
-
+          pick(first) +
+          pick(small) +
+          pick(vowels);
       }
 
-
-      /*
-        6 letters
-        Example shape: kaiven
-      */
-
-      else if (type === 3) {
-
+      else if (style === 3) {
         name =
-          pick(beginnings) +
-          pick(middles) +
-          pick(endings) +
-          pick(middles);
-
-      }
-
-
-      /*
-        6 letters
-      */
-
-      else if (type === 4) {
-
-        name =
-          pick(beginnings) +
-          pick(extras) +
+          pick(small) +
+          pick(vowels) +
+          pick(small) +
           pick(endings);
-
       }
 
-
-      /*
-        7 letters
-      */
-
-      else if (type === 5) {
-
+      else if (style === 4) {
         name =
-          pick(beginnings) +
-          pick(middles) +
-          pick(extras) +
-          pick(endings);
-
+          pick(first) +
+          pick(pieces);
       }
 
-
-      /*
-        7 letters
-      */
-
-      else if (type === 6) {
-
+      else if (style === 5) {
         name =
-          pick(shortBeginnings) +
-          pick(endings) +
-          pick(middles) +
-          pick(extras) +
+          pick(first) +
+          pick(small) +
           pick(endings);
-
       }
 
-
-      /*
-        8 letters
-      */
-
-      else if (type === 7) {
-
+      else if (style === 6) {
         name =
-          pick(beginnings) +
-          pick(middles) +
-          pick(extras) +
-          pick(middles) +
-          pick(endings);
-
+          pick(small) +
+          pick(vowels) +
+          pick(pieces);
       }
 
+      else if (style === 7) {
+        name =
+          pick(first) +
+          pick(small) +
+          pick(vowels) +
+          pick(endings);
+      }
 
-      /*
-        Short creator-style handle
-      */
+      else if (style === 8) {
+        name =
+          pick(first) +
+          pick(pieces) +
+          pick(small);
+      }
 
       else {
-
         name =
-          pick(shortBeginnings) +
-          pick(endings) +
-          pick(middles) +
-          pick(endings) +
-          pick(middles);
-
+          pick(small) +
+          pick(vowels) +
+          pick(small) +
+          pick(vowels) +
+          pick(endings);
       }
 
 
-      return name.toLowerCase();
+      /*
+        Keep everything lowercase and remove
+        anything outside normal username characters.
+      */
+
+      return name
+        .toLowerCase()
+        .replace(/[^a-z0-9]/g, "");
     }
 
 
-    function generateUsernames() {
+    function generateNames() {
 
-      const generated = new Set();
+      const set = new Set();
 
-
-      while (generated.size < 20) {
-
-        const username = makeUsername();
-
-        /*
-          Don't allow the same name twice in
-          the current batch.
-        */
-
-        generated.add(username);
+      while (set.size < 25) {
+        set.add(makeName());
       }
 
+      names = Array.from(set);
 
-      usernames =
-        Array.from(generated);
-
-
-      displayUsernames();
+      showNames();
     }
 
 
-    function displayUsernames() {
+    function showNames() {
 
-      const search =
-        searchInput.value
+      const query =
+        search.value
           .toLowerCase()
           .trim();
 
-
-      results.innerHTML = "";
+      list.innerHTML = "";
 
 
       const filtered =
-        usernames.filter(username =>
-          username.includes(search)
+        names.filter(name =>
+          name.includes(query)
         );
 
 
       if (filtered.length === 0) {
 
-        results.innerHTML = `
-          <div class="empty">
-            no usernames found
-          </div>
-        `;
+        list.innerHTML =
+          '<div class="nothing">nothing found</div>';
 
         return;
       }
 
 
-      filtered.forEach(username => {
+      filtered.forEach(name => {
 
-        const row =
+        const item =
           document.createElement("div");
 
-        row.className =
-          "username-row";
+        item.className = "item";
 
 
-        const favoriteKey =
-          "favorite_" + username;
+        const key =
+          "favorite_" + name;
 
 
-        const saved =
-          localStorage.getItem(favoriteKey)
-          === "true";
+        const isSaved =
+          localStorage.getItem(key) === "1";
 
 
-        row.innerHTML = `
-          <span class="name">
-            ${username}
-          </span>
+        item.innerHTML = `
+          <span class="username">${name}</span>
 
-          <div class="actions">
+          <div class="right">
 
             <button
+              class="btn favorite ${isSaved ? "saved" : ""}"
               type="button"
-              class="action favorite ${saved ? "active" : ""}"
             >
-              ${saved ? "♥" : "♡"}
+              ${isSaved ? "♥" : "♡"}
             </button>
 
             <button
+              class="btn copy"
               type="button"
-              class="action copy"
             >
               copy
             </button>
@@ -539,111 +426,74 @@
 
 
         const favorite =
-          row.querySelector(".favorite");
-
+          item.querySelector(".favorite");
 
         const copy =
-          row.querySelector(".copy");
+          item.querySelector(".copy");
 
 
-        favorite.addEventListener(
-          "click",
-          () => {
+        favorite.onclick = () => {
 
-            const currentlySaved =
-              localStorage.getItem(favoriteKey)
-              === "true";
+          const saved =
+            localStorage.getItem(key) === "1";
 
 
-            localStorage.setItem(
-              favoriteKey,
-              String(!currentlySaved)
-            );
-
-
-            favorite.textContent =
-              currentlySaved ? "♡" : "♥";
-
-
-            favorite.classList.toggle(
-              "active",
-              !currentlySaved
-            );
-
+          if (saved) {
+            localStorage.removeItem(key);
+            favorite.textContent = "♡";
+            favorite.classList.remove("saved");
           }
-        );
 
-
-        copy.addEventListener(
-          "click",
-          async () => {
-
-            try {
-
-              await navigator.clipboard
-                .writeText(username);
-
-            } catch {
-
-              const textarea =
-                document.createElement("textarea");
-
-              textarea.value = username;
-
-              document.body.appendChild(textarea);
-
-              textarea.select();
-
-              document.execCommand("copy");
-
-              textarea.remove();
-            }
-
-
-            copy.textContent =
-              "copied";
-
-
-            setTimeout(() => {
-
-              copy.textContent =
-                "copy";
-
-            }, 900);
-
+          else {
+            localStorage.setItem(key, "1");
+            favorite.textContent = "♥";
+            favorite.classList.add("saved");
           }
-        );
+        };
 
 
-        results.appendChild(row);
+        copy.onclick = async () => {
 
+          try {
+
+            await navigator.clipboard.writeText(name);
+
+          } catch {
+
+            const box =
+              document.createElement("textarea");
+
+            box.value = name;
+
+            document.body.appendChild(box);
+
+            box.select();
+
+            document.execCommand("copy");
+
+            box.remove();
+          }
+
+
+          copy.textContent = "copied";
+
+
+          setTimeout(() => {
+            copy.textContent = "copy";
+          }, 800);
+        };
+
+
+        list.appendChild(item);
       });
-
     }
 
 
-    /*
-      Generate a new batch whenever the button
-      is pressed.
-    */
+    generate.onclick = generateNames;
 
-    generateButton.onclick =
-      generateUsernames;
+    search.oninput = showNames;
 
-
-    /*
-      Search filters the current results.
-    */
-
-    searchInput.oninput =
-      displayUsernames;
-
-
-    /*
-      Generate the first batch immediately.
-    */
-
-    generateUsernames();
+    generateNames();
 
   </script>
 
