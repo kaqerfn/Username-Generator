@@ -15,7 +15,7 @@
       margin: 0;
       min-height: 100vh;
       background: #101012;
-      color: #e9e9eb;
+      color: #ededee;
       font-family: Arial, Helvetica, sans-serif;
     }
 
@@ -25,8 +25,6 @@
       padding: 32px 0 45px;
     }
 
-    /* header */
-
     .header {
       display: flex;
       align-items: center;
@@ -35,77 +33,79 @@
     }
 
     .title {
-      color: #c7c7ca;
+      color: #c8c8cc;
       font-size: 14px;
       font-weight: 500;
     }
 
-    .online {
+    .dot {
       width: 8px;
       height: 8px;
       border-radius: 50%;
       background: #ff6fae;
+      box-shadow: 0 0 10px rgba(255, 111, 174, 0.35);
     }
-
-    /* search */
 
     .search {
       width: 100%;
       height: 45px;
-      border: 1px solid #27272b;
-      outline: none;
+      padding: 0 14px;
+      margin-bottom: 9px;
+
+      border: 1px solid #28282c;
       border-radius: 9px;
+      outline: none;
+
       background: #1b1b1e;
       color: #fff;
-      padding: 0 14px;
-      font-size: 14px;
-      margin-bottom: 9px;
-    }
 
-    .search:focus {
-      border-color: #a94770;
+      font-size: 14px;
     }
 
     .search::placeholder {
-      color: #6f6f75;
+      color: #707076;
     }
 
-    /* buttons */
+    .search:focus {
+      border-color: #a94d76;
+    }
 
     .generate {
       width: 100%;
       height: 45px;
+
       border: 0;
       border-radius: 9px;
+
       background: #e45b98;
       color: white;
+
       font-size: 14px;
       font-weight: 600;
+
       cursor: pointer;
+      transition: background 0.15s;
     }
 
     .generate:hover {
-      background: #ee66a3;
+      background: #ed68a3;
     }
 
     .generate:active {
-      transform: scale(.99);
+      transform: scale(0.99);
     }
-
-    /* results */
 
     .results {
       margin-top: 17px;
     }
 
-    .username {
+    .username-row {
       display: flex;
       align-items: center;
       justify-content: space-between;
 
       min-height: 52px;
       padding: 0 13px;
-
       margin-bottom: 7px;
 
       background: #18181b;
@@ -116,7 +116,7 @@
     .name {
       font-family: monospace;
       font-size: 15px;
-      letter-spacing: .2px;
+      letter-spacing: 0.2px;
     }
 
     .actions {
@@ -127,9 +127,11 @@
     .action {
       border: 0;
       border-radius: 6px;
+      padding: 7px 9px;
+
       background: #222226;
       color: #77777e;
-      padding: 7px 9px;
+
       font-size: 12px;
       cursor: pointer;
     }
@@ -158,6 +160,7 @@
 
     @media (max-width: 500px) {
       .app {
+        width: 94%;
         padding-top: 24px;
       }
 
@@ -177,8 +180,9 @@
         username generator made by @kaqerfn on discord
       </div>
 
-      <div class="online"></div>
+      <div class="dot"></div>
     </header>
+
 
     <input
       id="search"
@@ -188,11 +192,18 @@
       autocomplete="off"
     >
 
-    <button id="generate" class="generate">
+
+    <button
+      id="generate"
+      class="generate"
+      type="button"
+    >
       generate
     </button>
 
+
     <section id="results" class="results"></section>
+
 
     <div class="footer">
       unlimited usernames
@@ -202,125 +213,139 @@
 
 
   <script>
-
-    const results = document.getElementById("results");
     const generateButton = document.getElementById("generate");
-    const search = document.getElementById("search");
+    const searchInput = document.getElementById("search");
+    const results = document.getElementById("results");
 
     let usernames = [];
 
 
     /*
-      These are the kinds of letter combinations
-      the generator likes.
+      The examples you gave are NOT used as usernames.
 
-      It avoids obvious words and avoids making
-      every username follow exactly the same pattern.
+      These are just building blocks that give the
+      generator a similar short / uncommon feeling.
     */
 
-    const starts = [
+    const consonants = "bcdfghjklmnpqrstvwxyz";
+    const vowels = "aeiou";
+
+    const goodPairs = [
       "ka", "ke", "ki", "ko",
       "za", "ze", "zi", "zo",
       "qa", "qe", "qi",
       "va", "ve", "vi",
-      "xa", "xe",
-      "it", "ix",
-      "ne", "no",
-      "ra", "re",
-      "de", "da",
-      "la", "le",
-      "se", "si"
-    ];
-
-    const middle = [
-      "q", "k", "x", "z",
-      "v", "n", "r", "d",
-      "f", "t", "l", "m"
+      "xa", "xe", "xi",
+      "ra", "re", "ri",
+      "da", "de", "di",
+      "la", "le", "li",
+      "na", "ne", "ni",
+      "sa", "se", "si",
+      "ta", "te", "ti"
     ];
 
     const endings = [
       "n", "q", "x", "z",
       "r", "f", "k", "v",
-      "a", "e", "u"
+      "d", "l"
     ];
 
 
-    function randomItem(array) {
-      return array[Math.floor(Math.random() * array.length)];
+    function randomFrom(text) {
+      return text[Math.floor(Math.random() * text.length)];
     }
 
 
-    function createUsername() {
+    function randomPair() {
+      return goodPairs[
+        Math.floor(Math.random() * goodPairs.length)
+      ];
+    }
 
-      const type = Math.floor(Math.random() * 5);
 
-      let name;
+    function makeUsername() {
+
+      /*
+        Several different structures are used so the
+        names don't all look identical.
+      */
+
+      const type = Math.floor(Math.random() * 7);
+
+      let name = "";
 
 
-      /* very short */
-
+      // 3 characters
       if (type === 0) {
-
         name =
-          randomItem([
-            "k", "z", "q", "x", "v", "n"
-          ]) +
-          randomItem([
-            "a", "e", "i", "o", "u"
-          ]) +
-          randomItem(endings);
-
+          randomFrom(consonants) +
+          randomFrom(vowels) +
+          randomFrom(endings);
       }
 
 
-      /* 4 letters */
-
+      // 4 characters
       else if (type === 1) {
-
         name =
-          randomItem(starts).slice(0, 2) +
-          randomItem(endings) +
-          randomItem(endings);
-
+          randomPair() +
+          randomFrom(endings) +
+          randomFrom(endings);
       }
 
 
-      /* 5 letters */
-
+      // 5 characters
       else if (type === 2) {
-
         name =
-          randomItem(starts) +
-          randomItem(middle) +
-          randomItem(endings);
-
+          randomPair() +
+          randomFrom(consonants) +
+          randomFrom(vowels) +
+          randomFrom(endings);
       }
 
 
-      /* 6 letters */
-
+      // 5 characters, different structure
       else if (type === 3) {
-
         name =
-          randomItem(starts) +
-          randomItem(middle) +
-          randomItem(endings) +
-          randomItem(endings);
-
+          randomFrom(consonants) +
+          randomFrom(vowels) +
+          randomFrom(consonants) +
+          randomPair();
       }
 
 
-      /* 7–8 letters */
-
-      else {
-
+      // 6 characters
+      else if (type === 4) {
         name =
-          randomItem(starts) +
-          randomItem(middle) +
-          randomItem(endings) +
-          randomItem(middle) +
-          randomItem(endings);
+          randomPair() +
+          randomFrom(consonants) +
+          randomFrom(vowels) +
+          randomFrom(endings) +
+          randomFrom(endings);
+      }
 
+
+      // 7 characters
+      else if (type === 5) {
+        name =
+          randomPair() +
+          randomFrom(consonants) +
+          randomFrom(vowels) +
+          randomFrom(consonants) +
+          randomFrom(vowels) +
+          randomFrom(endings);
+      }
+
+
+      // 8 characters
+      else {
+        name =
+          randomPair() +
+          randomFrom(consonants) +
+          randomFrom(vowels) +
+          randomFrom(consonants) +
+          randomFrom(vowels) +
+          randomFrom(endings) +
+          randomFrom(endings);
       }
 
 
@@ -330,16 +355,17 @@
 
     function generateUsernames() {
 
-      usernames = [];
+      const newNames = new Set();
 
-      while (usernames.length < 20) {
+      /*
+        Keep generating until we have 20 unique names.
+      */
 
-        const name = createUsername();
-
-        if (!usernames.includes(name)) {
-          usernames.push(name);
-        }
+      while (newNames.size < 20) {
+        newNames.add(makeUsername());
       }
+
+      usernames = Array.from(newNames);
 
       displayUsernames();
     }
@@ -347,13 +373,14 @@
 
     function displayUsernames() {
 
-      const query = search.value.toLowerCase().trim();
+      const searchText =
+        searchInput.value.toLowerCase().trim();
 
       results.innerHTML = "";
 
 
-      const filtered = usernames.filter(name =>
-        name.includes(query)
+      const filtered = usernames.filter(username =>
+        username.includes(searchText)
       );
 
 
@@ -369,28 +396,38 @@
       }
 
 
-      filtered.forEach(name => {
+      filtered.forEach(username => {
 
         const row = document.createElement("div");
-        row.className = "username";
+
+        row.className = "username-row";
 
 
-        const favoriteSaved =
-          localStorage.getItem("favorite_" + name) === "true";
+        const favoriteKey =
+          "favorite_" + username;
+
+        const isFavorite =
+          localStorage.getItem(favoriteKey) === "true";
 
 
         row.innerHTML = `
-          <span class="name">${name}</span>
+          <span class="name">${username}</span>
 
           <div class="actions">
 
-            <button class="action favorite ${
-              favoriteSaved ? "active" : ""
-            }">
-              ${favoriteSaved ? "♥" : "♡"}
+            <button
+              type="button"
+              class="action favorite ${
+                isFavorite ? "active" : ""
+              }"
+            >
+              ${isFavorite ? "♥" : "♡"}
             </button>
 
-            <button class="action copy">
+            <button
+              type="button"
+              class="action copy"
+            >
               copy
             </button>
 
@@ -407,22 +444,23 @@
 
         favorite.addEventListener("click", () => {
 
-          const saved =
-            localStorage.getItem("favorite_" + name) === "true";
+          const currentlySaved =
+            localStorage.getItem(favoriteKey) === "true";
 
 
           localStorage.setItem(
-            "favorite_" + name,
-            String(!saved)
+            favoriteKey,
+            String(!currentlySaved)
           );
 
 
           favorite.textContent =
-            !saved ? "♥" : "♡";
+            currentlySaved ? "♡" : "♥";
+
 
           favorite.classList.toggle(
             "active",
-            !saved
+            !currentlySaved
           );
 
         });
@@ -432,7 +470,7 @@
 
           try {
 
-            await navigator.clipboard.writeText(name);
+            await navigator.clipboard.writeText(username);
 
             copy.textContent = "copied";
 
@@ -442,12 +480,29 @@
 
           } catch {
 
-            copy.textContent = "failed";
+            /*
+              Fallback for browsers where clipboard
+              permissions are unavailable.
+            */
+
+            const textArea =
+              document.createElement("textarea");
+
+            textArea.value = username;
+
+            document.body.appendChild(textArea);
+
+            textArea.select();
+
+            document.execCommand("copy");
+
+            textArea.remove();
+
+            copy.textContent = "copied";
 
             setTimeout(() => {
               copy.textContent = "copy";
             }, 900);
-
           }
 
         });
@@ -460,17 +515,29 @@
     }
 
 
+    /*
+      Generate button
+    */
+
     generateButton.addEventListener(
       "click",
       generateUsernames
     );
 
 
-    search.addEventListener(
+    /*
+      Search updates instantly
+    */
+
+    searchInput.addEventListener(
       "input",
       displayUsernames
     );
 
+
+    /*
+      Generate the first set when the page opens.
+    */
 
     generateUsernames();
 
