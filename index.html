@@ -14,59 +14,70 @@
     body {
       margin: 0;
       min-height: 100vh;
-      background: #111113;
-      color: #eeeeef;
+      background: #101012;
+      color: #e9e9eb;
       font-family: Arial, Helvetica, sans-serif;
     }
 
     .app {
-      width: min(650px, 92%);
-      margin: 0 auto;
-      padding: 35px 0 50px;
+      width: min(680px, 92%);
+      margin: auto;
+      padding: 32px 0 45px;
     }
+
+    /* header */
 
     .header {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 22px;
+      margin-bottom: 24px;
     }
 
     .title {
-      font-size: 15px;
-      color: #c9c9cc;
+      color: #c7c7ca;
+      font-size: 14px;
+      font-weight: 500;
     }
 
-    .dot {
+    .online {
       width: 8px;
       height: 8px;
-      background: #ff6fae;
       border-radius: 50%;
+      background: #ff6fae;
     }
+
+    /* search */
 
     .search {
       width: 100%;
-      height: 46px;
-      border: none;
+      height: 45px;
+      border: 1px solid #27272b;
       outline: none;
-      border-radius: 10px;
-      background: #1d1d20;
+      border-radius: 9px;
+      background: #1b1b1e;
       color: #fff;
       padding: 0 14px;
       font-size: 14px;
-      margin-bottom: 10px;
+      margin-bottom: 9px;
+    }
+
+    .search:focus {
+      border-color: #a94770;
     }
 
     .search::placeholder {
-      color: #77777d;
+      color: #6f6f75;
     }
+
+    /* buttons */
 
     .generate {
       width: 100%;
       height: 45px;
-      border: none;
-      border-radius: 10px;
-      background: #e85b9b;
+      border: 0;
+      border-radius: 9px;
+      background: #e45b98;
       color: white;
       font-size: 14px;
       font-weight: 600;
@@ -74,50 +85,56 @@
     }
 
     .generate:hover {
-      background: #f06aa7;
+      background: #ee66a3;
     }
+
+    .generate:active {
+      transform: scale(.99);
+    }
+
+    /* results */
 
     .results {
-      margin-top: 18px;
+      margin-top: 17px;
     }
 
-    .username-row {
+    .username {
       display: flex;
       align-items: center;
       justify-content: space-between;
 
       min-height: 52px;
-      padding: 0 14px;
+      padding: 0 13px;
+
       margin-bottom: 7px;
 
-      background: #19191c;
-      border: 1px solid #232326;
-      border-radius: 10px;
+      background: #18181b;
+      border: 1px solid #242428;
+      border-radius: 9px;
     }
 
     .name {
       font-family: monospace;
       font-size: 15px;
-      color: #e7e7e9;
+      letter-spacing: .2px;
     }
 
-    .buttons {
+    .actions {
       display: flex;
-      align-items: center;
-      gap: 7px;
+      gap: 6px;
     }
 
-    .small-button {
-      border: none;
-      background: #232326;
-      color: #85858c;
-      border-radius: 7px;
+    .action {
+      border: 0;
+      border-radius: 6px;
+      background: #222226;
+      color: #77777e;
       padding: 7px 9px;
-      cursor: pointer;
       font-size: 12px;
+      cursor: pointer;
     }
 
-    .small-button:hover {
+    .action:hover {
       color: #ff6fae;
     }
 
@@ -126,32 +143,42 @@
     }
 
     .empty {
-      text-align: center;
       padding: 35px 0;
-      color: #66666d;
+      text-align: center;
+      color: #66666c;
       font-size: 13px;
     }
 
     .footer {
-      margin-top: 25px;
+      margin-top: 24px;
       text-align: center;
-      color: #55555b;
+      color: #505057;
       font-size: 11px;
+    }
+
+    @media (max-width: 500px) {
+      .app {
+        padding-top: 24px;
+      }
+
+      .title {
+        font-size: 12px;
+      }
     }
   </style>
 </head>
 
 <body>
 
-  <div class="app">
+  <main class="app">
 
-    <div class="header">
+    <header class="header">
       <div class="title">
         username generator made by @kaqerfn on discord
       </div>
 
-      <div class="dot"></div>
-    </div>
+      <div class="online"></div>
+    </header>
 
     <input
       id="search"
@@ -165,59 +192,148 @@
       generate
     </button>
 
-    <div id="results" class="results"></div>
+    <section id="results" class="results"></section>
 
     <div class="footer">
       unlimited usernames
     </div>
 
-  </div>
+  </main>
+
 
   <script>
+
     const results = document.getElementById("results");
     const generateButton = document.getElementById("generate");
     const search = document.getElementById("search");
 
-    const vowels = "aeiou";
-    const consonants = "bcdfghjklmnpqrstvwxyz";
-
     let usernames = [];
 
-    function randomLetter(chars) {
-      return chars[Math.floor(Math.random() * chars.length)];
+
+    /*
+      These are the kinds of letter combinations
+      the generator likes.
+
+      It avoids obvious words and avoids making
+      every username follow exactly the same pattern.
+    */
+
+    const starts = [
+      "ka", "ke", "ki", "ko",
+      "za", "ze", "zi", "zo",
+      "qa", "qe", "qi",
+      "va", "ve", "vi",
+      "xa", "xe",
+      "it", "ix",
+      "ne", "no",
+      "ra", "re",
+      "de", "da",
+      "la", "le",
+      "se", "si"
+    ];
+
+    const middle = [
+      "q", "k", "x", "z",
+      "v", "n", "r", "d",
+      "f", "t", "l", "m"
+    ];
+
+    const endings = [
+      "n", "q", "x", "z",
+      "r", "f", "k", "v",
+      "a", "e", "u"
+    ];
+
+
+    function randomItem(array) {
+      return array[Math.floor(Math.random() * array.length)];
     }
+
 
     function createUsername() {
-      const patterns = [
-        "cvcv",
-        "cvccv",
-        "cvcvc",
-        "ccvcv",
-        "cvccvc",
-        "cvcvcv",
-        "ccvcvc"
-      ];
 
-      const pattern =
-        patterns[Math.floor(Math.random() * patterns.length)];
+      const type = Math.floor(Math.random() * 5);
 
-      let username = "";
+      let name;
 
-      for (let i = 0; i < pattern.length; i++) {
-        if (pattern[i] === "c") {
-          username += randomLetter(consonants);
-        } else {
-          username += randomLetter(vowels);
-        }
+
+      /* very short */
+
+      if (type === 0) {
+
+        name =
+          randomItem([
+            "k", "z", "q", "x", "v", "n"
+          ]) +
+          randomItem([
+            "a", "e", "i", "o", "u"
+          ]) +
+          randomItem(endings);
+
       }
 
-      return username;
+
+      /* 4 letters */
+
+      else if (type === 1) {
+
+        name =
+          randomItem(starts).slice(0, 2) +
+          randomItem(endings) +
+          randomItem(endings);
+
+      }
+
+
+      /* 5 letters */
+
+      else if (type === 2) {
+
+        name =
+          randomItem(starts) +
+          randomItem(middle) +
+          randomItem(endings);
+
+      }
+
+
+      /* 6 letters */
+
+      else if (type === 3) {
+
+        name =
+          randomItem(starts) +
+          randomItem(middle) +
+          randomItem(endings) +
+          randomItem(endings);
+
+      }
+
+
+      /* 7–8 letters */
+
+      else {
+
+        name =
+          randomItem(starts) +
+          randomItem(middle) +
+          randomItem(endings) +
+          randomItem(middle) +
+          randomItem(endings);
+
+      }
+
+
+      return name.toLowerCase();
     }
 
+
     function generateUsernames() {
+
       usernames = [];
 
-      while (usernames.length < 15) {
+      while (usernames.length < 20) {
+
         const name = createUsername();
 
         if (!usernames.includes(name)) {
@@ -228,63 +344,94 @@
       displayUsernames();
     }
 
+
     function displayUsernames() {
-      const searchText = search.value.toLowerCase();
+
+      const query = search.value.toLowerCase().trim();
 
       results.innerHTML = "";
 
+
       const filtered = usernames.filter(name =>
-        name.toLowerCase().includes(searchText)
+        name.includes(query)
       );
 
+
       if (filtered.length === 0) {
+
         results.innerHTML = `
           <div class="empty">
             no usernames found
           </div>
         `;
+
         return;
       }
 
-      filtered.forEach(name => {
-        const row = document.createElement("div");
-        row.className = "username-row";
 
-        const saved =
-          localStorage.getItem("favorite-" + name) === "true";
+      filtered.forEach(name => {
+
+        const row = document.createElement("div");
+        row.className = "username";
+
+
+        const favoriteSaved =
+          localStorage.getItem("favorite_" + name) === "true";
+
 
         row.innerHTML = `
           <span class="name">${name}</span>
 
-          <div class="buttons">
-            <button class="small-button favorite ${saved ? "active" : ""}">
-              ${saved ? "♥" : "♡"}
+          <div class="actions">
+
+            <button class="action favorite ${
+              favoriteSaved ? "active" : ""
+            }">
+              ${favoriteSaved ? "♥" : "♡"}
             </button>
 
-            <button class="small-button copy">
+            <button class="action copy">
               copy
             </button>
+
           </div>
         `;
 
-        const favorite = row.querySelector(".favorite");
-        const copy = row.querySelector(".copy");
+
+        const favorite =
+          row.querySelector(".favorite");
+
+        const copy =
+          row.querySelector(".copy");
+
 
         favorite.addEventListener("click", () => {
-          const isFavorite =
-            localStorage.getItem("favorite-" + name) === "true";
+
+          const saved =
+            localStorage.getItem("favorite_" + name) === "true";
+
 
           localStorage.setItem(
-            "favorite-" + name,
-            String(!isFavorite)
+            "favorite_" + name,
+            String(!saved)
           );
 
-          favorite.textContent = !isFavorite ? "♥" : "♡";
-          favorite.classList.toggle("active", !isFavorite);
+
+          favorite.textContent =
+            !saved ? "♥" : "♡";
+
+          favorite.classList.toggle(
+            "active",
+            !saved
+          );
+
         });
 
+
         copy.addEventListener("click", async () => {
+
           try {
+
             await navigator.clipboard.writeText(name);
 
             copy.textContent = "copied";
@@ -294,19 +441,39 @@
             }, 900);
 
           } catch {
-            copy.textContent = "error";
+
+            copy.textContent = "failed";
+
+            setTimeout(() => {
+              copy.textContent = "copy";
+            }, 900);
+
           }
+
         });
 
+
         results.appendChild(row);
+
       });
+
     }
 
-    generateButton.addEventListener("click", generateUsernames);
 
-    search.addEventListener("input", displayUsernames);
+    generateButton.addEventListener(
+      "click",
+      generateUsernames
+    );
+
+
+    search.addEventListener(
+      "input",
+      displayUsernames
+    );
+
 
     generateUsernames();
+
   </script>
 
 </body>
