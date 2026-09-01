@@ -3,363 +3,599 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Username Generator</title>
+
+  <title>RareName</title>
+
   <style>
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
-      font-family: Arial, Helvetica, sans-serif;
     }
+
     body {
+      background: #08090c;
+      color: #fff;
+      font-family: Arial, Helvetica, sans-serif;
       min-height: 100vh;
-      background: #0b0b10;
-      color: white;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 20px;
     }
-    .container {
+
+    .page {
       width: 100%;
-      max-width: 700px;
-      background: #12121a;
-      border: 1px solid #292936;
-      border-radius: 20px;
-      padding: 35px;
-      box-shadow: 0 20px 60px rgba(0, 0, 0, .45);
+      max-width: 900px;
+      margin: auto;
+      padding: 70px 20px;
     }
+
+    .header {
+      text-align: center;
+      margin-bottom: 45px;
+    }
+
+    .logo {
+      font-size: 15px;
+      font-weight: 800;
+      letter-spacing: 3px;
+      color: #777;
+      text-transform: uppercase;
+      margin-bottom: 18px;
+    }
+
     h1 {
-      text-align: center;
-      font-size: 36px;
-      margin-bottom: 8px;
+      font-size: clamp(42px, 8vw, 72px);
+      letter-spacing: -4px;
+      line-height: 1;
+      margin-bottom: 15px;
     }
+
     .subtitle {
-      text-align: center;
-      color: #9292a2;
-      margin-bottom: 30px;
-    }
-    label {
-      display: block;
-      margin-bottom: 8px;
-      color: #cfcfd8;
-      font-size: 14px;
-    }
-    input, select {
-      width: 100%;
-      padding: 14px;
-      border-radius: 10px;
-      border: 1px solid #30303d;
-      background: #0c0c12;
-      color: white;
-      outline: none;
+      color: #777;
       font-size: 16px;
+    }
+
+    .generator {
+      background: #0e1015;
+      border: 1px solid #1c1f27;
+      border-radius: 18px;
+      padding: 25px;
+    }
+
+    .controls {
+      display: grid;
+      grid-template-columns: 1fr 180px;
+      gap: 12px;
       margin-bottom: 20px;
     }
-    input:focus, select:focus {
-      border-color: #6666ff;
-    }
-    .options {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 15px;
-    }
-    button {
+
+    input,
+    select {
       width: 100%;
-      padding: 15px;
-      border: none;
+      height: 52px;
+      border: 1px solid #242832;
       border-radius: 10px;
-      background: #6464ff;
+      background: #090a0e;
       color: white;
-      font-size: 16px;
-      font-weight: bold;
+      padding: 0 15px;
+      font-size: 15px;
+      outline: none;
+    }
+
+    input:focus,
+    select:focus {
+      border-color: #555b68;
+    }
+
+    button {
+      border: 0;
       cursor: pointer;
-      transition: .2s;
+      color: white;
+      font-weight: 700;
+      transition: .15s;
     }
-    button:hover {
-      transform: translateY(-2px);
-      filter: brightness(1.12);
-    }
+
     .generate {
-      margin-top: 5px;
+      width: 100%;
+      height: 52px;
+      border-radius: 10px;
+      background: white;
+      color: #090a0e;
+      font-size: 15px;
       margin-bottom: 25px;
     }
+
+    .generate:hover {
+      transform: translateY(-1px);
+      background: #e8e8e8;
+    }
+
     .results {
-      display: flex;
-      flex-direction: column;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
       gap: 10px;
     }
-    .username {
+
+    .name {
+      min-height: 64px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      background: #0c0c12;
-      border: 1px solid #292936;
-      border-radius: 10px;
-      padding: 14px 16px;
+      padding: 12px 14px;
+      background: #090a0e;
+      border: 1px solid #1d2028;
+      border-radius: 11px;
     }
-    .username span {
+
+    .name-text {
       font-size: 17px;
-      font-weight: bold;
+      font-weight: 700;
+      letter-spacing: .4px;
     }
-    .copy {
-      width: auto;
-      padding: 8px 13px;
-      font-size: 13px;
-      background: #22222e;
-    }
-    .favorites {
-      margin-top: 25px;
-    }
-    .favorites h2 {
-      font-size: 18px;
-      margin-bottom: 10px;
-    }
-    .favorite-item {
+
+    .actions {
       display: flex;
-      justify-content: space-between;
       align-items: center;
-      padding: 10px 12px;
-      margin-bottom: 8px;
+      gap: 6px;
+    }
+
+    .copy,
+    .favorite {
+      width: 38px;
+      height: 38px;
       border-radius: 8px;
-      background: #0c0c12;
-      color: #ddd;
+      background: #171a21;
+      color: #aaa;
+      font-size: 15px;
     }
-    .remove {
-      width: auto;
-      padding: 5px 10px;
-      background: #292936;
-      font-size: 12px;
+
+    .copy:hover,
+    .favorite:hover {
+      background: #222630;
+      color: white;
     }
-    .heart {
-      cursor: pointer;
-      margin-left: 10px;
-      font-size: 18px;
+
+    .favorite.active {
+      color: white;
     }
-    .empty {
-      color: #777784;
+
+    .bottom {
+      margin-top: 35px;
+    }
+
+    .bottom-title {
+      font-size: 13px;
+      color: #666;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-bottom: 12px;
+    }
+
+    .favorites {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .favorite-name {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: #101218;
+      border: 1px solid #1c1f27;
+      border-radius: 8px;
+      padding: 9px 11px;
       font-size: 14px;
     }
-    @media (max-width: 600px) {
-      .container {
-        padding: 25px 18px;
+
+    .remove {
+      background: transparent;
+      color: #555;
+      font-size: 15px;
+    }
+
+    .remove:hover {
+      color: white;
+    }
+
+    .empty {
+      color: #555;
+      font-size: 14px;
+    }
+
+    .copied {
+      position: fixed;
+      bottom: 25px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: white;
+      color: black;
+      padding: 11px 18px;
+      border-radius: 9px;
+      font-size: 14px;
+      font-weight: 700;
+      opacity: 0;
+      pointer-events: none;
+      transition: .2s;
+    }
+
+    .copied.show {
+      opacity: 1;
+    }
+
+    @media (max-width: 650px) {
+      .page {
+        padding: 45px 15px;
       }
-      h1 {
-        font-size: 29px;
-      }
-      .options {
+
+      .controls {
         grid-template-columns: 1fr;
-        gap: 0;
+      }
+
+      .results {
+        grid-template-columns: 1fr;
+      }
+
+      h1 {
+        letter-spacing: -2px;
       }
     }
   </style>
 </head>
+
 <body>
-  <main class="container">
-    <h1>Username Generator</h1>
-    <p class="subtitle">Create unique usernames in seconds.</p>
-    <label for="theme">Enter a word or theme</label>
-    <input
-      id="theme"
-      type="text"
-      placeholder="Example: Saturn"
-      maxlength="20"
-    >
-    <div class="options">
-      <div>
-        <label for="style">Style</label>
+
+  <div class="page">
+
+    <header class="header">
+      <div class="logo">RareName</div>
+
+      <h1>Find your name.</h1>
+
+      <p class="subtitle">
+        Generate short, clean and unique usernames.
+      </p>
+    </header>
+
+    <section class="generator">
+
+      <div class="controls">
+
+        <input
+          id="input"
+          type="text"
+          maxlength="12"
+          placeholder="Optional word..."
+          autocomplete="off"
+        >
+
         <select id="style">
-          <option value="gaming">Gaming</option>
-          <option value="aesthetic">Aesthetic</option>
-          <option value="short">Short</option>
-          <option value="random">Random</option>
+          <option value="rare">Rare</option>
+          <option value="short">3–4 Characters</option>
+          <option value="clean">Clean</option>
+          <option value="prefix">itz / x / vx</option>
         </select>
+
       </div>
-      <div>
-        <label for="length">Number of names</label>
-        <select id="length">
-          <option value="5">5</option>
-          <option value="10" selected>10</option>
-          <option value="15">15</option>
-        </select>
+
+      <button class="generate" onclick="generate()">
+        Generate Names
+      </button>
+
+      <div id="results" class="results"></div>
+
+      <div class="bottom">
+
+        <div class="bottom-title">
+          Favorites
+        </div>
+
+        <div id="favorites" class="favorites">
+          <span class="empty">Nothing saved yet.</span>
+        </div>
+
       </div>
-    </div>
-    <button class="generate" onclick="generateUsernames()">
-      Generate Usernames
-    </button>
-    <div id="results" class="results"></div>
-    <section class="favorites">
-      <h2>❤️ Favorites</h2>
-      <div id="favoritesList">
-        <p class="empty">No favorites yet.</p>
-      </div>
+
     </section>
-  </main>
+
+  </div>
+
+  <div id="copied" class="copied">
+    Copied
+  </div>
+
+
 <script>
-  const words = [
-    "Nova", "Vex", "Void", "Zen", "Flux",
-    "Echo", "Frost", "Shadow", "Lunar", "Pixel",
-    "Orbit", "Venom", "Drift", "Ghost", "Blaze",
-    "Storm", "Cosmo", "Neon", "Aero", "Nexus",
-    "Zero", "Phantom", "Rift", "Pulse", "Mystic",
-    "Fury", "Astro", "Glitch", "Wave", "Hyper"
+
+const consonants =
+  "bcdfghjklmnpqrstvwxyz";
+
+const vowels =
+  "aeiou";
+
+const endings =
+  ["q", "x", "z", "n", "r", "k", "v", "y"];
+
+const prefixes =
+  ["itz", "x", "vx", "zy", "ky", "nx"];
+
+let favorites =
+  JSON.parse(localStorage.getItem("rareNames")) || [];
+
+
+function pick(string) {
+  return string[
+    Math.floor(Math.random() * string.length)
   ];
-  const numbers = [
-    "7", "9", "11", "21", "24",
-    "27", "47", "77", "99", "101"
-  ];
-  let favorites = JSON.parse(localStorage.getItem("favorites")) || [];
-  function randomItem(array) {
-    return array[Math.floor(Math.random() * array.length)];
-  }
-  function clean(text) {
-    return text
-      .replace(/[^a-zA-Z0-9]/g, "")
-      .trim();
-  }
-  function createUsername(theme, style) {
-    const randomWord = randomItem(words);
-    const number = randomItem(numbers);
-    if (!theme) {
-      theme = randomWord;
-    }
-    switch (style) {
-      case "gaming":
-        return randomItem([
-          theme + randomWord,
-          randomWord + theme,
-          theme + "X",
-          "x" + theme,
-          theme + number,
-          randomWord + number,
-          theme + randomWord + number
-        ]);
-      case "aesthetic":
-        return randomItem([
-          theme + "ly",
-          "luna" + theme,
-          theme + "void",
-          theme + "wave",
-          "soft" + theme,
-          theme + "core",
-          theme + "nova"
-        ]);
-      case "short":
-        return randomItem([
-          theme.slice(0, 4) + number,
-          theme.slice(0, 3) + randomWord.slice(0, 2),
-          theme.slice(0, 5) + "x",
-          randomWord.slice(0, 4) + number
-        ]);
-      default:
-        return randomItem([
-          theme + randomWord,
-          randomWord + theme,
-          theme + number,
-          randomWord + number,
-          theme + "X",
-          "x" + theme,
-          theme + randomWord + number
-        ]);
+}
+
+
+function randomConsonant() {
+  return pick(consonants);
+}
+
+
+function randomVowel() {
+  return pick(vowels);
+}
+
+
+/*
+  Creates names with more natural-looking
+  random patterns instead of pure gibberish.
+*/
+
+function rareName(min, max) {
+
+  const length =
+    Math.floor(Math.random() * (max - min + 1)) + min;
+
+  let result = "";
+
+  for (let i = 0; i < length; i++) {
+
+    /*
+      Occasionally place a vowel.
+      This creates patterns like:
+
+      kaqerfn
+      zenunq
+      kera
+      vexun
+    */
+
+    if (i === 1 || Math.random() < .28) {
+      result += randomVowel();
+    } else {
+      result += randomConsonant();
     }
   }
-  function generateUsernames() {
-    const themeInput = document.getElementById("theme").value;
-    const style = document.getElementById("style").value;
-    const amount = Number(document.getElementById("length").value);
-    const results = document.getElementById("results");
-    const theme = clean(themeInput);
-    results.innerHTML = "";
-    const generated = new Set();
-    while (generated.size < amount) {
-      let username = createUsername(theme, style);
-      username = username
-        .replace(/\s+/g, "")
-        .slice(0, 20);
-      generated.add(username);
+
+  // Occasionally add a rare ending.
+  if (Math.random() < .35) {
+    result += pick(endings);
+  }
+
+  return result.toLowerCase();
+}
+
+
+function createName(style, input) {
+
+  if (input) {
+
+    const word =
+      input
+        .toLowerCase()
+        .replace(/[^a-z]/g, "");
+
+    if (style === "short") {
+      return word.slice(0, 3) +
+        pick(["x", "z", "q", "k"]);
     }
-    generated.forEach(username => {
-      const row = document.createElement("div");
-      row.className = "username";
-      row.innerHTML = `
-        <span>${username}</span>
-        <div>
-          <button
-            class="copy"
-            onclick="copyUsername('${username}')">
-            Copy
-          </button>
-          <span
-            class="heart"
-            onclick="addFavorite('${username}')">
-            ♡
-          </span>
-        </div>
-      `;
-      results.appendChild(row);
-    });
-  }
-  function copyUsername(username) {
-    navigator.clipboard.writeText(username);
-    alert("Copied: " + username);
-  }
-  function addFavorite(username) {
-    if (!favorites.includes(username)) {
-      favorites.push(username);
-      localStorage.setItem(
-        "favorites",
-        JSON.stringify(favorites)
-      );
-      renderFavorites();
+
+    if (style === "prefix") {
+      return pick(prefixes) +
+        rareName(3, 5);
     }
-  }
-  function removeFavorite(username) {
-    favorites = favorites.filter(
-      item => item !== username
-    );
-    localStorage.setItem(
-      "favorites",
-      JSON.stringify(favorites)
-    );
-    renderFavorites();
-  }
-  function renderFavorites() {
-    const list = document.getElementById("favoritesList");
-    if (favorites.length === 0) {
-      list.innerHTML =
-        '<p class="empty">No favorites yet.</p>';
-      return;
+
+    if (style === "clean") {
+      return word.slice(0, 5) +
+        pick(["a", "e", "i", "x", "n"]);
     }
-    list.innerHTML = "";
-    favorites.forEach(username => {
-      const item = document.createElement("div");
-      item.className = "favorite-item";
-      item.innerHTML = `
-        <span>${username}</span>
-        <div>
-          <button
-            class="copy"
-            onclick="copyUsername('${username}')">
-            Copy
-          </button>
-          <button
-            class="remove"
-            onclick="removeFavorite('${username}')">
-            Remove
-          </button>
-        </div>
-      `;
-      list.appendChild(item);
-    });
+
+    return word.slice(0, 4) +
+      rareName(2, 3);
   }
-  document.getElementById("theme")
-    .addEventListener("keydown", function(event) {
-      if (event.key === "Enter") {
-        generateUsernames();
-      }
-    });
+
+
+  if (style === "short") {
+    return rareName(3, 4)
+      .slice(0, 4);
+  }
+
+
+  if (style === "clean") {
+    return rareName(4, 6);
+  }
+
+
+  if (style === "prefix") {
+    return pick(prefixes) +
+      rareName(3, 5);
+  }
+
+
+  return rareName(5, 8);
+}
+
+
+function generate() {
+
+  const style =
+    document.getElementById("style").value;
+
+  const input =
+    document.getElementById("input").value;
+
+  const results =
+    document.getElementById("results");
+
+  results.innerHTML = "";
+
+  const names = new Set();
+
+  while (names.size < 10) {
+    names.add(createName(style, input));
+  }
+
+  names.forEach(name => {
+
+    const box =
+      document.createElement("div");
+
+    box.className = "name";
+
+    const isFavorite =
+      favorites.includes(name);
+
+    box.innerHTML = `
+      <span class="name-text">${name}</span>
+
+      <div class="actions">
+
+        <button
+          class="copy"
+          title="Copy"
+          onclick="copyName('${name}')">
+          ⧉
+        </button>
+
+        <button
+          class="favorite ${isFavorite ? "active" : ""}"
+          title="Favorite"
+          onclick="toggleFavorite('${name}', this)">
+          ${isFavorite ? "★" : "☆"}
+        </button>
+
+      </div>
+    `;
+
+    results.appendChild(box);
+  });
+}
+
+
+function copyName(name) {
+
+  navigator.clipboard.writeText(name);
+
+  const popup =
+    document.getElementById("copied");
+
+  popup.textContent =
+    `"${name}" copied`;
+
+  popup.classList.add("show");
+
+  setTimeout(() => {
+    popup.classList.remove("show");
+  }, 1200);
+}
+
+
+function toggleFavorite(name, button) {
+
+  if (favorites.includes(name)) {
+
+    favorites =
+      favorites.filter(x => x !== name);
+
+    button.textContent = "☆";
+    button.classList.remove("active");
+
+  } else {
+
+    favorites.push(name);
+
+    button.textContent = "★";
+    button.classList.add("active");
+  }
+
+  localStorage.setItem(
+    "rareNames",
+    JSON.stringify(favorites)
+  );
+
   renderFavorites();
-  generateUsernames();
+}
+
+
+function removeFavorite(name) {
+
+  favorites =
+    favorites.filter(x => x !== name);
+
+  localStorage.setItem(
+    "rareNames",
+    JSON.stringify(favorites)
+  );
+
+  renderFavorites();
+}
+
+
+function renderFavorites() {
+
+  const container =
+    document.getElementById("favorites");
+
+  container.innerHTML = "";
+
+  if (favorites.length === 0) {
+
+    container.innerHTML =
+      `<span class="empty">Nothing saved yet.</span>`;
+
+    return;
+  }
+
+  favorites.forEach(name => {
+
+    const item =
+      document.createElement("div");
+
+    item.className =
+      "favorite-name";
+
+    item.innerHTML = `
+      <span>${name}</span>
+
+      <button
+        class="remove"
+        onclick="removeFavorite('${name}')">
+        ×
+      </button>
+    `;
+
+    container.appendChild(item);
+  });
+}
+
+
+document
+  .getElementById("input")
+  .addEventListener("keydown", e => {
+
+    if (e.key === "Enter") {
+      generate();
+    }
+
+  });
+
+
+renderFavorites();
+generate();
+
 </script>
+
 </body>
 </html>
