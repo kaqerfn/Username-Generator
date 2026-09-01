@@ -13,48 +13,48 @@
 
     body {
       margin: 0;
-      background: #111113;
-      color: #f2f2f3;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-    }
-
-    .page {
       min-height: 100vh;
-      padding: 25px;
+      background: #111113;
+      color: #eeeeef;
+      font-family: Arial, Helvetica, sans-serif;
     }
 
-    .top {
+    .app {
+      width: min(650px, 92%);
+      margin: 0 auto;
+      padding: 35px 0 50px;
+    }
+
+    .header {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 35px;
+      margin-bottom: 22px;
     }
 
     .title {
-      font-size: 21px;
-      font-weight: 600;
-      letter-spacing: -0.3px;
+      font-size: 15px;
+      color: #c9c9cc;
     }
 
-    .status {
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
+    .dot {
+      width: 8px;
+      height: 8px;
       background: #ff6fae;
-      box-shadow: 0 0 12px rgba(255, 111, 174, 0.5);
+      border-radius: 50%;
     }
 
     .search {
       width: 100%;
-      height: 52px;
-      border: 0;
+      height: 46px;
+      border: none;
       outline: none;
-      border-radius: 14px;
-      padding: 0 17px;
-      background: #202023;
-      color: white;
-      font-size: 15px;
-      margin-bottom: 14px;
+      border-radius: 10px;
+      background: #1d1d20;
+      color: #fff;
+      padding: 0 14px;
+      font-size: 14px;
+      margin-bottom: 10px;
     }
 
     .search::placeholder {
@@ -63,128 +63,251 @@
 
     .generate {
       width: 100%;
-      height: 50px;
-      border: 0;
-      border-radius: 14px;
+      height: 45px;
+      border: none;
+      border-radius: 10px;
       background: #e85b9b;
       color: white;
-      font-size: 15px;
+      font-size: 14px;
       font-weight: 600;
       cursor: pointer;
     }
 
-    .generate:active {
-      transform: scale(0.99);
+    .generate:hover {
+      background: #f06aa7;
     }
 
     .results {
-      margin-top: 25px;
+      margin-top: 18px;
     }
 
-    .result {
+    .username-row {
       display: flex;
       align-items: center;
       justify-content: space-between;
 
-      background: #1b1b1e;
-      border-radius: 14px;
+      min-height: 52px;
+      padding: 0 14px;
+      margin-bottom: 7px;
 
-      padding: 16px 17px;
-      margin-bottom: 9px;
+      background: #19191c;
+      border: 1px solid #232326;
+      border-radius: 10px;
+    }
 
+    .name {
       font-family: monospace;
-      font-size: 16px;
+      font-size: 15px;
+      color: #e7e7e9;
     }
 
-    .username {
-      color: #eeeeef;
+    .buttons {
+      display: flex;
+      align-items: center;
+      gap: 7px;
     }
 
-    .copy {
-      border: 0;
-      background: transparent;
-      color: #77777d;
+    .small-button {
+      border: none;
+      background: #232326;
+      color: #85858c;
+      border-radius: 7px;
+      padding: 7px 9px;
       cursor: pointer;
+      font-size: 12px;
+    }
+
+    .small-button:hover {
+      color: #ff6fae;
+    }
+
+    .favorite.active {
+      color: #ff6fae;
+    }
+
+    .empty {
+      text-align: center;
+      padding: 35px 0;
+      color: #66666d;
       font-size: 13px;
     }
 
-    .copy:hover {
-      color: #e85b9b;
-    }
-
-    .bottom {
-      margin-top: 35px;
-      color: #5f5f65;
-      font-size: 12px;
+    .footer {
+      margin-top: 25px;
       text-align: center;
-    }
-
-    @media (min-width: 700px) {
-      .page {
-        width: 600px;
-        margin: auto;
-        padding-top: 45px;
-      }
+      color: #55555b;
+      font-size: 11px;
     }
   </style>
 </head>
 
 <body>
 
-  <main class="page">
+  <div class="app">
 
-    <div class="top">
+    <div class="header">
       <div class="title">
         username generator made by @kaqerfn on discord
       </div>
 
-      <div class="status"></div>
+      <div class="dot"></div>
     </div>
 
     <input
+      id="search"
       class="search"
       type="text"
       placeholder="search…"
+      autocomplete="off"
     >
 
-    <button class="generate">
+    <button id="generate" class="generate">
       generate
     </button>
 
-    <div class="results">
+    <div id="results" class="results"></div>
 
-      <div class="result">
-        <span class="username">kaqerfn</span>
-        <button class="copy">copy</button>
-      </div>
-
-      <div class="result">
-        <span class="username">zenunq</span>
-        <button class="copy">copy</button>
-      </div>
-
-      <div class="result">
-        <span class="username">kera</span>
-        <button class="copy">copy</button>
-      </div>
-
-      <div class="result">
-        <span class="username">zkl</span>
-        <button class="copy">copy</button>
-      </div>
-
-      <div class="result">
-        <span class="username">itzdexau</span>
-        <button class="copy">copy</button>
-      </div>
-
+    <div class="footer">
+      unlimited usernames
     </div>
 
-    <div class="bottom">
-      simple username generator
-    </div>
+  </div>
 
-  </main>
+  <script>
+    const results = document.getElementById("results");
+    const generateButton = document.getElementById("generate");
+    const search = document.getElementById("search");
+
+    const vowels = "aeiou";
+    const consonants = "bcdfghjklmnpqrstvwxyz";
+
+    let usernames = [];
+
+    function randomLetter(chars) {
+      return chars[Math.floor(Math.random() * chars.length)];
+    }
+
+    function createUsername() {
+      const patterns = [
+        "cvcv",
+        "cvccv",
+        "cvcvc",
+        "ccvcv",
+        "cvccvc",
+        "cvcvcv",
+        "ccvcvc"
+      ];
+
+      const pattern =
+        patterns[Math.floor(Math.random() * patterns.length)];
+
+      let username = "";
+
+      for (let i = 0; i < pattern.length; i++) {
+        if (pattern[i] === "c") {
+          username += randomLetter(consonants);
+        } else {
+          username += randomLetter(vowels);
+        }
+      }
+
+      return username;
+    }
+
+    function generateUsernames() {
+      usernames = [];
+
+      while (usernames.length < 15) {
+        const name = createUsername();
+
+        if (!usernames.includes(name)) {
+          usernames.push(name);
+        }
+      }
+
+      displayUsernames();
+    }
+
+    function displayUsernames() {
+      const searchText = search.value.toLowerCase();
+
+      results.innerHTML = "";
+
+      const filtered = usernames.filter(name =>
+        name.toLowerCase().includes(searchText)
+      );
+
+      if (filtered.length === 0) {
+        results.innerHTML = `
+          <div class="empty">
+            no usernames found
+          </div>
+        `;
+        return;
+      }
+
+      filtered.forEach(name => {
+        const row = document.createElement("div");
+        row.className = "username-row";
+
+        const saved =
+          localStorage.getItem("favorite-" + name) === "true";
+
+        row.innerHTML = `
+          <span class="name">${name}</span>
+
+          <div class="buttons">
+            <button class="small-button favorite ${saved ? "active" : ""}">
+              ${saved ? "♥" : "♡"}
+            </button>
+
+            <button class="small-button copy">
+              copy
+            </button>
+          </div>
+        `;
+
+        const favorite = row.querySelector(".favorite");
+        const copy = row.querySelector(".copy");
+
+        favorite.addEventListener("click", () => {
+          const isFavorite =
+            localStorage.getItem("favorite-" + name) === "true";
+
+          localStorage.setItem(
+            "favorite-" + name,
+            String(!isFavorite)
+          );
+
+          favorite.textContent = !isFavorite ? "♥" : "♡";
+          favorite.classList.toggle("active", !isFavorite);
+        });
+
+        copy.addEventListener("click", async () => {
+          try {
+            await navigator.clipboard.writeText(name);
+
+            copy.textContent = "copied";
+
+            setTimeout(() => {
+              copy.textContent = "copy";
+            }, 900);
+
+          } catch {
+            copy.textContent = "error";
+          }
+        });
+
+        results.appendChild(row);
+      });
+    }
+
+    generateButton.addEventListener("click", generateUsernames);
+
+    search.addEventListener("input", displayUsernames);
+
+    generateUsernames();
+  </script>
 
 </body>
 </html>
