@@ -1,152 +1,330 @@
-#include <iostream>
-#include <vector>
-#include <string>
-#include <random>
-#include <unordered_set>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-using namespace std;
+    <title>namegen</title>
 
-random_device rd;
-mt19937 rng(rd());
+    <style>
+        * {
+            box-sizing: border-box;
+        }
 
-string pick(const vector<string>& list) {
-    uniform_int_distribution<int> dist(0, list.size() - 1);
-    return list[dist(rng)];
+        body {
+            margin: 0;
+            background: #0b0b0b;
+            color: #f1f1f1;
+            font-family: Arial, sans-serif;
+        }
+
+        .wrap {
+            width: 92%;
+            max-width: 650px;
+            margin: 70px auto;
+        }
+
+        h1 {
+            margin-bottom: 6px;
+            font-size: 32px;
+        }
+
+        p {
+            margin-top: 0;
+            color: #888;
+        }
+
+        .box {
+            margin-top: 25px;
+            padding: 20px;
+            background: #111;
+            border: 1px solid #222;
+            border-radius: 8px;
+        }
+
+        input,
+        select,
+        button {
+            width: 100%;
+            height: 44px;
+            border-radius: 6px;
+            border: 1px solid #292929;
+            background: #0b0b0b;
+            color: white;
+            padding: 0 12px;
+            font-size: 14px;
+        }
+
+        input,
+        select {
+            margin-bottom: 10px;
+        }
+
+        button {
+            background: #eee;
+            color: #111;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        button:hover {
+            background: white;
+        }
+
+        #names {
+            margin-top: 18px;
+        }
+
+        .name {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 13px;
+            margin-bottom: 8px;
+            background: #0d0d0d;
+            border: 1px solid #202020;
+            border-radius: 6px;
+        }
+
+        .name span {
+            font-family: monospace;
+            font-size: 16px;
+        }
+
+        .copy {
+            width: auto;
+            height: 32px;
+            padding: 0 10px;
+            background: #1b1b1b;
+            color: #ccc;
+        }
+
+        .copy:hover {
+            background: #272727;
+            color: white;
+        }
+
+        .small {
+            margin-top: 18px;
+            font-size: 12px;
+            color: #555;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="wrap">
+
+    <h1>namegen</h1>
+
+    <p>short usernames. nothing complicated.</p>
+
+    <div class="box">
+
+        <input
+            id="word"
+            type="text"
+            placeholder="optional word"
+            maxlength="10"
+        >
+
+        <select id="type">
+            <option value="rare">rare</option>
+            <option value="short">short</option>
+            <option value="prefix">itz / x style</option>
+        </select>
+
+        <button onclick="generate()">
+            generate
+        </button>
+
+        <div id="names"></div>
+
+        <div class="small">
+            names are generated locally in your browser.
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+
+const starts = [
+    "ka", "ke", "ki", "ko",
+    "za", "ze", "zi",
+    "va", "ve", "vi",
+    "ra", "re", "ri",
+    "qa", "qe",
+    "na", "ne",
+    "la", "le",
+    "da", "de",
+    "sa", "se"
+];
+
+const middles = [
+    "qer", "qen", "qel",
+    "zer", "zen", "zel",
+    "ker", "ken",
+    "ver", "ven",
+    "ren", "rel",
+    "dex", "vex",
+    "nex", "ray",
+    "rae", "zay"
+];
+
+const endings = [
+    "q", "n", "r", "x",
+    "z", "k", "y",
+    "en", "er",
+    "un", "au"
+];
+
+const shortNames = [
+    "kera",
+    "zera",
+    "zena",
+    "vexa",
+    "nexa",
+    "raya",
+    "kae",
+    "zai",
+    "kei",
+    "qen",
+    "zen",
+    "kyr",
+    "vex",
+    "zkl",
+    "qra",
+    "kza",
+    "zra"
+];
+
+function pick(list) {
+    return list[Math.floor(Math.random() * list.length)];
 }
 
-string createUsername() {
+function makeName(type) {
 
-    vector<string> starts = {
-        "ka", "ke", "ki", "ko",
-        "za", "ze", "zi", "zo",
-        "va", "ve", "vi",
-        "ra", "re", "ri",
-        "qa", "qe", "qi",
-        "na", "ne", "ni",
-        "la", "le", "li",
-        "da", "de", "di",
-        "sa", "se", "si"
-    };
-
-    vector<string> middles = {
-        "qer", "qen", "qel",
-        "zer", "zen", "zel",
-        "ker", "ken", "kel",
-        "ver", "ven", "vel",
-        "ren", "rel", "rin",
-        "dex", "vex", "nex",
-        "ray", "rae",
-        "zay", "zae",
-        "kyr", "kye"
-    };
-
-    vector<string> endings = {
-        "n", "q", "r", "x",
-        "z", "k", "y",
-        "a", "e", "au",
-        "en", "er", "un"
-    };
-
-    vector<string> shortNames = {
-        "kera", "zena", "zera",
-        "vexa", "nexa", "raya",
-        "kae", "zai", "kei",
-        "qen", "zen", "kyr",
-        "vex", "zkl", "qra",
-        "kza", "zra", "vra", "kex"
-    };
-
-    vector<string> prefixes = {
-        "itz", "x", "vx", "zy", "ky"
-    };
-
-    uniform_int_distribution<int> typeDist(0, 7);
-    int type = typeDist(rng);
-
-    string name;
-
-    switch (type) {
-
-        // kaqerfn / zenunq
-        case 0:
-            name = pick(starts)
-                  + pick(middles)
-                  + pick(endings);
-            break;
-
-        // Short names
-        case 1:
-            name = pick(starts)
-                  + pick({"a", "e", "i", "o"})
-                  + pick(endings);
-            break;
-
-        // kera / zena / vexa
-        case 2:
-            name = pick(shortNames);
-            break;
-
-        // 5–6 characters
-        case 3:
-            name = pick(starts)
-                  + pick({
-                      "er", "en", "ar",
-                      "ay", "ex", "un"
-                  });
-            break;
-
-        // Compact random-looking names
-        case 4:
-            name = pick(starts)
-                  + pick(middles).substr(0, 2)
-                  + pick(endings);
-            break;
-
-        // Very short names
-        case 5:
-            name = pick({
-                "zkl", "kzr", "vex",
-                "qra", "kyr", "zra",
-                "vka", "qen", "kex",
-                "zya"
-            });
-            break;
-
-        // itz____ style
-        case 6:
-            name = "itz"
-                  + pick(starts)
-                  + pick({
-                      "au", "en", "er", "a"
-                  });
-            break;
-
-        default:
-            name = pick(shortNames);
-            break;
+    if (type === "short") {
+        return pick(shortNames);
     }
 
-    return name;
+    if (type === "prefix") {
+
+        const prefix = pick([
+            "itz",
+            "x",
+            "vx",
+            "zy",
+            "ky"
+        ]);
+
+        return prefix +
+            pick(starts) +
+            pick([
+                "au",
+                "en",
+                "er",
+                "a"
+            ]);
+    }
+
+    return pick(starts) +
+        pick(middles) +
+        pick(endings);
 }
 
-int main() {
+function generate() {
 
-    int amount;
+    const type =
+        document.getElementById("type").value;
 
-    cout << "How many usernames? ";
-    cin >> amount;
+    const word =
+        document.getElementById("word").value
+            .toLowerCase()
+            .replace(/[^a-z]/g, "");
 
-    unordered_set<string> usernames;
+    const output =
+        document.getElementById("names");
 
-    while (usernames.size() < amount) {
-        usernames.insert(createUsername());
+    output.innerHTML = "";
+
+    const names = new Set();
+
+    while (names.size < 10) {
+
+        let name = makeName(type);
+
+        if (word.length > 0) {
+
+            if (type === "short") {
+                name =
+                    word.substring(0, 3) +
+                    pick(["a", "e", "x", "q"]);
+            }
+
+            else if (type === "prefix") {
+                name =
+                    "itz" +
+                    word.substring(0, 5);
+            }
+
+            else {
+                name =
+                    word.substring(0, 4) +
+                    pick([
+                        "q",
+                        "n",
+                        "x",
+                        "er",
+                        "en"
+                    ]);
+            }
+        }
+
+        names.add(name);
     }
 
-    cout << "\nGenerated usernames:\n\n";
+    names.forEach(name => {
 
-    for (const string& username : usernames) {
-        cout << username << '\n';
-    }
+        const row =
+            document.createElement("div");
 
-    return 0;
+        row.className = "name";
+
+        const text =
+            document.createElement("span");
+
+        text.textContent = name;
+
+        const copy =
+            document.createElement("button");
+
+        copy.className = "copy";
+        copy.textContent = "copy";
+
+        copy.onclick = function() {
+            navigator.clipboard.writeText(name);
+            copy.textContent = "copied";
+
+            setTimeout(function() {
+                copy.textContent = "copy";
+            }, 800);
+        };
+
+        row.appendChild(text);
+        row.appendChild(copy);
+
+        output.appendChild(row);
+    });
 }
+
+generate();
+
+</script>
+
+</body>
+</html>
