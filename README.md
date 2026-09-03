@@ -1,1 +1,2 @@
 # Username-Generator
+I made this username generator with HTML, CSS, and JavaScript. Everything is in one index.html file, and I used GitHub Pages to host it. It generates random usernames, lets you search through them, copy them, and save your favorites. The favorites are saved in the browser, and I made the design dark with pink details. The website is in the root of the main branch.
